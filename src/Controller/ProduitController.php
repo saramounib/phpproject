@@ -33,7 +33,9 @@ final class ProduitController extends AbstractController
             $entityManager->persist($produit);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', 'Produit ajouté avec succès');
+
+            return $this->redirectToRoute('app_produit_index');
         }
 
         return $this->render('produit/new.html.twig', [
@@ -59,7 +61,9 @@ final class ProduitController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', 'Produit modifié avec succès');
+
+            return $this->redirectToRoute('app_produit_index');
         }
 
         return $this->render('produit/edit.html.twig', [
@@ -71,11 +75,13 @@ final class ProduitController extends AbstractController
     #[Route('/{id}', name: 'app_produit_delete', methods: ['POST'])]
     public function delete(Request $request, Produit $produit, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$produit->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$produit->getId(), $request->request->get('_token'))) {
             $entityManager->remove($produit);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Produit supprimé avec succès');
         }
 
-        return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_produit_index');
     }
 }

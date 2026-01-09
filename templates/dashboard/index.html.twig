@@ -10,8 +10,8 @@
         <div class="col-md-3">
             <div class="card text-white bg-primary mb-3">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Produits</h5>
-                    <p class="card-text fs-3">{{ nbProduits }}</p>
+                    <h5>Produits</h5>
+                    <p class="fs-3">{{ nbProduits }}</p>
                 </div>
             </div>
         </div>
@@ -19,8 +19,8 @@
         <div class="col-md-3">
             <div class="card text-white bg-success mb-3">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Catégories</h5>
-                    <p class="card-text fs-3">{{ nbCategories }}</p>
+                    <h5>Catégories</h5>
+                    <p class="fs-3">{{ nbCategories }}</p>
                 </div>
             </div>
         </div>
@@ -28,8 +28,8 @@
         <div class="col-md-3">
             <div class="card text-white bg-warning mb-3">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Paniers</h5>
-                    <p class="card-text fs-3">{{ nbPaniers }}</p>
+                    <h5>Paniers</h5>
+                    <p class="fs-3">{{ nbPaniers }}</p>
                 </div>
             </div>
         </div>
@@ -37,11 +37,67 @@
         <div class="col-md-3">
             <div class="card text-white bg-danger mb-3">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Clients</h5>
-                    <p class="card-text fs-3">{{ nbClients }}</p>
+                    <h5>Clients</h5>
+                    <p class="fs-3">{{ nbClients }}</p>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Graphique -->
+    <div class="card shadow p-4 mt-4">
+        <h4 class="text-center mb-3">📈 Statistiques générales</h4>
+        <canvas id="statsChart"></canvas>
+    </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+const ctx = document.getElementById('statsChart');
+
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Produits', 'Catégories', 'Paniers', 'Clients'],
+        datasets: [{
+            label: 'Statistiques globales',
+            data: [
+                {{ nbProduits }},
+                {{ nbCategories }},
+                {{ nbPaniers }},
+                {{ nbClients }}
+            ],
+            backgroundColor: [
+                'rgba(13, 110, 253, 0.8)',
+                'rgba(25, 135, 84, 0.8)',
+                'rgba(255, 193, 7, 0.8)',
+                'rgba(220, 53, 69, 0.8)'
+            ],
+            borderRadius: 12
+        }]
+    },
+    options: {
+        responsive: true,
+        animation: {
+            duration: 1200,
+            easing: 'easeOutBounce'
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    font: { size: 14 }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: { stepSize: 1 }
+            }
+        }
+    }
+});
+</script>
 {% endblock %}

@@ -15,31 +15,31 @@ class Produit
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 20)]
+    #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'float')]
     private ?float $prix = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'produits')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Categorie $idCategorie = null;
+    private ?Categorie $categorie = null;
 
     /**
      * @var Collection<int, Vendeur>
      */
     #[ORM\OneToMany(targetEntity: Vendeur::class, mappedBy: 'produit')]
-    private Collection $idVendeur;
+    private Collection $vendeurs;
 
-    #[ORM\ManyToOne(inversedBy: 'idProduit')]
+    #[ORM\ManyToOne(inversedBy: 'produits')]
     private ?LignePanier $lignePanier = null;
 
-    #[ORM\ManyToOne(inversedBy: 'idProduit')]
+    #[ORM\ManyToOne(inversedBy: 'produits')]
     private ?LigneCom $ligneCom = null;
 
     public function __construct()
     {
-        $this->idVendeur = new ArrayCollection();
+        $this->vendeurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -69,39 +69,39 @@ class Produit
         return $this;
     }
 
-    public function getIdCategorie(): ?Categorie
+    public function getCategorie(): ?Categorie
     {
-        return $this->idCategorie;
+        return $this->categorie;
     }
 
-    public function setIdCategorie(Categorie $idCategorie): static
+    public function setCategorie(?Categorie $categorie): static
     {
-        $this->idCategorie = $idCategorie;
+        $this->categorie = $categorie;
         return $this;
     }
 
     /**
      * @return Collection<int, Vendeur>
      */
-    public function getIdVendeur(): Collection
+    public function getVendeurs(): Collection
     {
-        return $this->idVendeur;
+        return $this->vendeurs;
     }
 
-    public function addIdVendeur(Vendeur $idVendeur): static
+    public function addVendeur(Vendeur $vendeur): static
     {
-        if (!$this->idVendeur->contains($idVendeur)) {
-            $this->idVendeur->add($idVendeur);
-            $idVendeur->setProduit($this);
+        if (!$this->vendeurs->contains($vendeur)) {
+            $this->vendeurs->add($vendeur);
+            $vendeur->setProduit($this);
         }
         return $this;
     }
 
-    public function removeIdVendeur(Vendeur $idVendeur): static
+    public function removeVendeur(Vendeur $vendeur): static
     {
-        if ($this->idVendeur->removeElement($idVendeur)) {
-            if ($idVendeur->getProduit() === $this) {
-                $idVendeur->setProduit(null);
+        if ($this->vendeurs->removeElement($vendeur)) {
+            if ($vendeur->getProduit() === $this) {
+                $vendeur->setProduit(null);
             }
         }
         return $this;
