@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Panier index{% endblock %}
+
+{% block body %}
+    <h1>Liste des paniers</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Date du panier</th>
+                <th>Client</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for panier in paniers %}
+                <tr>
+                    <td>{{ panier.id }}</td>
+                    <td>{{ panier.nom }}</td>
+                    <td>{{ panier.datePanier ? panier.datePanier|date('d/m/Y') : '' }}</td>
+                    <td>
+                        {% for client in panier.idClient %}
+                            {{ client.nom }} {{ client.prenom }}<br>
+                        {% else %}
+                            Aucun client
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <a href="{{ path('app_panier_show', {'id': panier.id}) }}" class="btn btn-sm btn-info">👁 Voir</a>
+                        <a href="{{ path('app_panier_edit', {'id': panier.id}) }}" class="btn btn-sm btn-warning">✏️ Modifier</a>
+                        <form method="post" action="{{ path('app_panier_delete', {'id': panier.id}) }}" style="display:inline-block;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ panier.id) }}">
+                            <button class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr ?')">🗑Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">Aucun panier trouvé</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_panier_new') }}" class="btn btn-success mb-3">➕ Créer un nouveau panier</a>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catégorie index{% endblock %}
+
+{% block body %}
+    <h1>Liste des catégories</h1>
+ <a href="{{ path('app_categorie_new') }}" class="btn btn-success mb-3">➕ Créer une nouvelle catégorie</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for categorie in categories %}
+                <tr>
+                    <td>{{ categorie.id }}</td>
+                    <td>{{ categorie.nom }}</td>
+                    <td>
+                        <a href="{{ path('app_categorie_show', {'id': categorie.id}) }}" class="btn btn-sm btn-info">👁 Voir</a>
+                        <a href="{{ path('app_categorie_edit', {'id': categorie.id}) }}" class="btn btn-sm btn-warning"> ✏️Modifier</a>
+                        <form method="post" action="{{ path('app_categorie_delete', {'id': categorie.id}) }}" style="display:inline-block;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ categorie.id) }}">
+                            <button class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr ?')">🗑 Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">Aucune catégorie trouvée</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+   
+{% endblock %}

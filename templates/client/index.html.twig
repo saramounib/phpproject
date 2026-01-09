@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Clients{% endblock %}
+
+{% block body %}
+<h1>Liste des clients</h1>
+
+<a href="{{ path('app_client_new') }}" class="btn btn-success mb-3">➕ Nouveau client</a>
+
+<table class="table table-striped table-hover table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Id</th>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Telephone</th>
+            <th>Adresse</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for client in clients %}
+            <tr>
+                <td>{{ client.id }}</td>
+                <td>{{ client.nom }}</td>
+                <td>{{ client.email }}</td>
+                <td>{{ client.tel }}</td>
+                <td>{{ client.adresse }}</td>
+                <td>
+                    <a class="btn btn-sm btn-info" href="{{ path('app_client_show', {'id': client.id}) }}">👁 Voir</a>
+                    <a class="btn btn-sm btn-warning" href="{{ path('app_client_edit', {'id': client.id}) }}">✏️ Modifier</a>
+                    <a class="btn btn-sm btn-danger"
+                       href="{{ path('app_client_delete', {'id': client.id}) }}"
+                       onclick="return confirm('Voulez-vous vraiment supprimer ce client ?')">🗑 Supprimer</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">Aucun client trouvé</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
