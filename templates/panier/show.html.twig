@@ -3,28 +3,32 @@
 {% block title %}Panier{% endblock %}
 
 {% block body %}
-    <h1>Panier</h1>
+<h1>Panier #{{ panier.id }}</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ panier.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ panier.nom }}</td>
-            </tr>
-            <tr>
-                <th>DatePanier</th>
-                <td>{{ panier.datePanier ? panier.datePanier|date('Y-m-d') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+<table class="table">
+    <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ panier.id }}</td>
+        </tr>
+        <tr>
+            <th>Date du panier</th>
+            <td>{{ panier.datePanier ? panier.datePanier|date('d/m/Y') : '' }}</td>
+        </tr>
+        <tr>
+            <th>Client</th>
+            <td>
+                {% if panier.client %}
+                    {{ panier.client.nom }} {{ panier.client.prenom }}
+                {% else %}
+                    Aucun client
+                {% endif %}
+            </td>
+        </tr>
+    </tbody>
+</table>
 
-    <a href="{{ path('app_panier_index') }}">back to list</a>
-
-    <a href="{{ path('app_panier_edit', {'id': panier.id}) }}">edit</a>
-
-    {{ include('panier/_delete_form.html.twig') }}
+<a href="{{ path('app_panier_index') }}" class="btn btn-secondary">⬅ Retour à la liste</a>
+<a href="{{ path('app_panier_edit', {'id': panier.id}) }}" class="btn btn-warning">✏️ Modifier</a>
+{{ include('panier/_delete_form.html.twig') }}
 {% endblock %}

@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\PanierRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PanierRepository::class)]
@@ -16,24 +15,21 @@ class Panier
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 20)]
-    private ?string $nom = null;
+    #[ORM\ManyToOne(targetEntity: Client::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Client $client = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+
+    #[ORM\OneToMany(targetEntity: LignePanier::class, mappedBy: 'panier', cascade: ['persist', 'remove'])]
+    private Collection $lignes;
+
+    #[ORM\Column(type: "datetime")]
     private ?\DateTime $datePanier = null;
-
-    /**
-     * @var Collection<int, Client>
-     */
-    #[ORM\OneToMany(targetEntity: Client::class, mappedBy: 'panier')]
-    private Collection $idClient;
-
-    #[ORM\ManyToOne(inversedBy: 'idPanier')]
-    private ?LignePanier $lignePanier = null;
 
     public function __construct()
     {
-        $this->idClient = new ArrayCollection();
+        $this->lignes = new ArrayCollection();
+        $this->datePanier = new \DateTime();
     }
 
     public function getId(): ?int
@@ -41,14 +37,41 @@ class Panier
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getClient(): ?Client
     {
-        return $this->nom;
+        return $this->client;
     }
 
-    public function setNom(string $nom): static
+    public function setClient(?Client $client): self
     {
-        $this->nom = $nom;
+        $this->client = $client;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LignePanier>
+     */
+    public function getLignes(): Collection
+    {
+        return $this->lignes;
+    }
+
+    public function addLigne(LignePanier $ligne): self
+    {
+        if (!$this->lignes->contains($ligne)) {
+            $this->lignes->add($ligne);
+            $ligne->setPanier($this);
+        }
+        return $this;
+    }
+
+    public function removeLigne(LignePanier $ligne): self
+    {
+        if ($this->lignes->removeElement($ligne)) {
+            if ($ligne->getPanier() === $this) {
+                $ligne->setPanier(null);
+            }
+        }
         return $this;
     }
 
@@ -57,47 +80,9 @@ class Panier
         return $this->datePanier;
     }
 
-    public function setDatePanier(\DateTime $datePanier): static
+    public function setDatePanier(\DateTime $datePanier): self
     {
         $this->datePanier = $datePanier;
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Client>
-     */
-    public function getIdClient(): Collection
-    {
-        return $this->idClient;
-    }
-
-    public function addIdClient(Client $client): static
-    {
-        if (!$this->idClient->contains($client)) {
-            $this->idClient->add($client);
-            $client->setPanier($this);
-        }
-        return $this;
-    }
-
-    public function removeIdClient(Client $client): static
-    {
-        if ($this->idClient->removeElement($client)) {
-            if ($client->getPanier() === $this) {
-                $client->setPanier(null);
-            }
-        }
-        return $this;
-    }
-
-    public function getLignePanier(): ?LignePanier
-    {
-        return $this->lignePanier;
-    }
-
-    public function setLignePanier(?LignePanier $lignePanier): static
-    {
-        $this->lignePanier = $lignePanier;
         return $this;
     }
 }

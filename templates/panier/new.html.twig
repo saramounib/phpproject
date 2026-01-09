@@ -1,11 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Panier{% endblock %}
+{% block title %}Créer un Panier{% endblock %}
 
 {% block body %}
-    <h1>Create new Panier</h1>
+<h1>Créer un Panier</h1>
 
-    {{ include('panier/_form.html.twig') }}
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn btn-success">Créer</button>
+{{ form_end(form) }}
 
-    <a href="{{ path('app_panier_index') }}">back to list</a>
+<a href="{{ path('app_panier_index') }}" class="btn btn-secondary mt-2">⬅ Retour à la liste</a>
 {% endblock %}

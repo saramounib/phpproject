@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\LignePanierRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LignePanierRepository::class)]
@@ -18,23 +16,13 @@ class LignePanier
     #[ORM\Column]
     private ?int $quantite = null;
 
-    /**
-     * @var Collection<int, Panier>
-     */
-    #[ORM\OneToMany(targetEntity: Panier::class, mappedBy: 'lignePanier')]
-    private Collection $idPanier;
+    #[ORM\ManyToOne(targetEntity: Panier::class, inversedBy: 'lignes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Panier $panier = null;
 
-    /**
-     * @var Collection<int, Produit>
-     */
-    #[ORM\OneToMany(targetEntity: Produit::class, mappedBy: 'lignePanier')]
-    private Collection $idProduit;
-
-    public function __construct()
-    {
-        $this->idPanier = new ArrayCollection();
-        $this->idProduit = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(targetEntity: Produit::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Produit $produit = null;
 
     public function getId(): ?int
     {
@@ -46,63 +34,31 @@ class LignePanier
         return $this->quantite;
     }
 
-    public function setQuantite(int $quantite): static
+    public function setQuantite(int $quantite): self
     {
         $this->quantite = $quantite;
         return $this;
     }
 
-    /**
-     * @return Collection<int, Panier>
-     */
-    public function getIdPanier(): Collection
+    public function getPanier(): ?Panier
     {
-        return $this->idPanier;
+        return $this->panier;
     }
 
-    public function addIdPanier(Panier $panier): static
+    public function setPanier(?Panier $panier): self
     {
-        if (!$this->idPanier->contains($panier)) {
-            $this->idPanier->add($panier);
-            $panier->setLignePanier($this);
-        }
+        $this->panier = $panier;
         return $this;
     }
 
-    public function removeIdPanier(Panier $panier): static
+    public function getProduit(): ?Produit
     {
-        if ($this->idPanier->removeElement($panier)) {
-            if ($panier->getLignePanier() === $this) {
-                $panier->setLignePanier(null);
-            }
-        }
-        return $this;
+        return $this->produit;
     }
 
-    /**
-     * @return Collection<int, Produit>
-     */
-    public function getIdProduit(): Collection
+    public function setProduit(?Produit $produit): self
     {
-        return $this->idProduit;
-    }
-
-    public function addIdProduit(Produit $produit): static
-    {
-        if (!$this->idProduit->contains($produit)) {
-            $this->idProduit->add($produit);
-            $produit->setLignePanier($this);
-        }
-        return $this;
-    }
-
-    public function removeIdProduit(Produit $produit): static
-    {
-        if ($this->idProduit->removeElement($produit)) {
-            if ($produit->getLignePanier() === $this) {
-                $produit->setLignePanier(null);
-            }
-        }
+        $this->produit = $produit;
         return $this;
     }
 }
