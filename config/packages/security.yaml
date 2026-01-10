@@ -22,6 +22,7 @@ security:
             custom_authenticator: App\Security\UserAuthenticator
             logout:
                 path: app_logout
+                target: app_login
                 # where to redirect after logout
                 # target: app_any_route
 
@@ -40,20 +41,24 @@ security:
             # switch_user: true
 
     # Note: Only the *first* matching rule is applied
+  
+    # Pages accessibles sans connexion
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
-         # Empêche l’accès au dashboard si non connecté
-        - { path: ^/dashboard, roles: ROLE_USER }
+    # Empêche l’accès au dashboard si non connecté
+    - { path: ^/dashboard, roles: ROLE_USER }
 
-        # Empêche l’accès aux pages CRUD produits si non connecté
-        - { path: ^/produit, roles: ROLE_USER }
+    # Empêche l’accès aux pages CRUD produits si non connecté
+    - { path: ^/produit, roles: ROLE_USER }
 
-        # Empêche l’accès aux pages CRUD catégories si non connecté
-        - { path: ^/categorie, roles: ROLE_USER }
-        
-       
-        - { path: ^/client, roles: ROLE_USER }
+    - { path: ^/categorie, roles: ROLE_USER }
+    - { path: ^/client, roles: ROLE_USER }
+    - { path: ^/panier, roles: ROLE_USER }
+
+    # Pages accessibles sans connexion
+    - { path: ^/login, roles: PUBLIC_ACCESS }
+    - { path: ^/logout, roles: PUBLIC_ACCESS }
+
+
 
 
 when@test:

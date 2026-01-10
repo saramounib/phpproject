@@ -12,6 +12,9 @@ class DashboardController extends AbstractController
     #[Route('/dashboard', name: 'app_dashboard')]
     public function index(): Response
     {
+        // Bloquer tout accès si l'utilisateur n'est pas connecté
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         return $this->render('dashboard/index.html.twig', [
             'nbProduits' => 10,
             'nbCategories' => 5,
