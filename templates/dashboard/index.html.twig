@@ -47,8 +47,9 @@
     <!-- Graphique -->
     <div class="card shadow p-4 mt-4">
         <h4 class="text-center mb-3">📈 Statistiques générales</h4>
-        <canvas id="statsChart"></canvas>
+        <canvas id="statsChart" width="500" height="400" style="display:block; margin:0 auto;></canvas>
     </div>
+ 
 </div>
 {% endblock %}
 
@@ -79,7 +80,7 @@ new Chart(ctx, {
         }]
     },
     options: {
-        responsive: true,
+        responsive: false,
         animation: {
             duration: 1200,
             easing: 'easeOutBounce'
@@ -99,5 +100,6 @@ new Chart(ctx, {
         }
     }
 });
+
 </script>
 {% endblock %}
